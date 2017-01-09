@@ -28,14 +28,16 @@ export class AppComponent {
       console.log(JSON.stringify(error));
     });
 
-    this.chatBox = "oi";
+    this.chatBox = "";
     this.socket = io();
     this.socket.on("chat_message", (msg) => {
+      console.log('receiving message:', msg)
       this.messages.push(msg);
     });
   }
 
   send(message) {
+    console.log('sending message:', message);
     this.socket.emit("chat_message", message);
     this.chatBox = "";
   }

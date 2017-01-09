@@ -1,6 +1,14 @@
+var ChatModel = require("../models/chatmodel");
+
 const appRouter = function(app) {
     app.get("/fetch", (req, res) => {
-        res.send({ message: "hello from the back-end!" });
+        ChatModel.getAll((error, result) => {
+            if(error) {
+                return res.status(400).send(error);
+            }
+            
+            return res.send(result);
+        });
     });
 };
  

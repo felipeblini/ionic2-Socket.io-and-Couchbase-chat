@@ -1,25 +1,40 @@
-var express = require("express");
-var path = require("path");
-var app = express();
+const express = require("express");
+const path = require("path");
+const app = express();
+const config = require("./config");
+const couchbase = require("couchbase");
  
-var server = require("http").Server(app);
-var io = require("socket.io").listen(server);
+const server = require("http").Server(app);
+const io = require("socket.io").listen(server);
+
+module.exports.bucket = (new couchbase.Cluster(config.couchbase.server)).openBucket(config.couchbase.bucket);
  
 app.use(express.static(path.join(__dirname, "public")));
-app.use("/scripts", express.static(__dirname + "/node_modules/"));
  
-var routes = require("./routes/routes.js")(app);
+const routes = require("./routes/routes.js")(app);
+const ChatModel = require("./models/chatmodel.js");
  
+// everytime a new user access the page with the socket.io client script
 io.on("connection", socket => {
     console.log('a user connected');
 
+     // everytime time a new msg is received
     socket.on("chat_message", msg => {
         console.log("message received:", msg);
 
-        // sending the message to everyone
         io.emit("chat_message", msg);
         console.log("msg sent to everyone:", msg);
-        
+
+        // storing the message in the couchbase
+        // ChatModel.create({message: msg}, (error, result) => {
+        //     if(error) {
+        //         console.log(JSON.stringify(error));
+        //     }
+
+        //     // sending/broadcasting the message to everyone
+        //     io.emit("chat_message", msg);
+        //     console.log("msg sent to everyone:", msg);
+        // }); 
     });
 });
  
