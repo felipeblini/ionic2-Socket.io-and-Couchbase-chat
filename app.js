@@ -22,19 +22,16 @@ io.on("connection", socket => {
     socket.on("chat_message", msg => {
         console.log("message received:", msg);
 
-        io.emit("chat_message", msg);
-        console.log("msg sent to everyone:", msg);
+        console.log("storing the message in the couchbase");
+        ChatModel.create({message: msg}, (error, result) => {
+            if(error) {
+                console.log(JSON.stringify(error));
+            }
 
-        // storing the message in the couchbase
-        // ChatModel.create({message: msg}, (error, result) => {
-        //     if(error) {
-        //         console.log(JSON.stringify(error));
-        //     }
-
-        //     // sending/broadcasting the message to everyone
-        //     io.emit("chat_message", msg);
-        //     console.log("msg sent to everyone:", msg);
-        // }); 
+            // sending/broadcasting the message to everyone
+            io.emit("chat_message", msg);
+            console.log("msg sent to everyone:", msg);
+        }); 
     });
 });
  

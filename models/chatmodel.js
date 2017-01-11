@@ -22,7 +22,9 @@ ChatModel.create = function(data, callback) {
 
 ChatModel.getAll = function(callback) {
     var statement = "SELECT id, message " +
-                    "FROM '" + config.couchbase.bucket + "'";
+                    "FROM `" + config.couchbase.bucket + "`";
+
+    console.log('executing:', statement);
 
     var query = N1qlQuery.fromString(statement).consistency(N1qlQuery.Consistency.REQUEST_PLUS);
     
