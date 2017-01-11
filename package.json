@@ -18,7 +18,9 @@
     "commitizen": "^2.9.2",
     "cz-conventional-changelog": "^1.2.0"
   },
-  "czConfig": {
-    "path": "node_modules/cz-conventional-changelog"
-  } 
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    }
+  }
 }
